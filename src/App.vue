@@ -10,6 +10,7 @@
 <script>
 import AppToolbar from './components/AppToolbar.vue'
 import AppSearch from './components/AppSearch.vue'
+import debounce from 'lodash/debounce'
   export default{
     components: {
       AppToolbar,
@@ -21,6 +22,12 @@ import AppSearch from './components/AppSearch.vue'
         query: "",
         placeholder: "Wnat someting?!"
       }
+    },
+
+    watch: {
+      query: debounce((newValue) => {
+        console.log(newValue)
+      }, 500)
     }
   };
 </script>
