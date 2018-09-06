@@ -9,3 +9,5 @@ export default class GitHub {
     axios.get(`users/${username}/repos`);
   }
 }
+
+export const gitHub = new GitHub ();
