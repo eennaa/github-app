@@ -4,13 +4,16 @@
         <template slot="left"> </template>
         <template slot="right"> </template>    
       </app-toolbar>
-      <app-search :query.sync="query" :placeholder="placeholder"></app-search>       
+      <app-search :query.sync="query" :placeholder="placeholder"></app-search>
+      <!-- {{ repos }}      -->
     </v-ons-page>
 </template>
 <script>
 import AppToolbar from './components/AppToolbar.vue'
 import AppSearch from './components/AppSearch.vue'
 import debounce from 'lodash/debounce'
+import { gitHub } from './services/GitHubService.js'
+
   export default{
     components: {
       AppToolbar,
@@ -20,13 +23,19 @@ import debounce from 'lodash/debounce'
     data() {
       return {
         query: "",
-        placeholder: "Wnat someting?!"
+        placeholder: "Wnat someting?!",
+        repos: []
       }
     },
 
     watch: {
-      query: debounce((newValue) => {
-        console.log(newValue)
+      query: debounce(function (newValue) {
+        // console.log(newValue)
+        gitHub
+        .getRepos(newValue)
+        .then((response) => {
+          this.repos = response.data
+        })
       }, 500)
     }
   };

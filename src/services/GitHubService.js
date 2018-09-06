@@ -6,8 +6,8 @@ export default class GitHub {
   }
 
   getRepos(username) {
-    axios.get(`users/${username}/repos`);
+    return axios.get(`users/${username}/repos`);
   }
 }
 
-export const gitHub = new GitHub ();
+export const gitHub = new GitHub();
