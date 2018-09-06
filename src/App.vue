@@ -6,18 +6,21 @@
       </app-toolbar>
       <app-search :query.sync="query" :placeholder="placeholder"></app-search>
       <!-- {{ repos }}      -->
+      <app-list-repos> </app-list-repos>
     </v-ons-page>
 </template>
 <script>
 import AppToolbar from './components/AppToolbar.vue'
 import AppSearch from './components/AppSearch.vue'
+import AppListRepos from './components/AppListRepos.vue'
 import debounce from 'lodash/debounce'
 import { gitHub } from './services/GitHubService.js'
 
   export default{
     components: {
       AppToolbar,
-      AppSearch
+      AppSearch,
+      AppListRepos
     },
 
     data() {
