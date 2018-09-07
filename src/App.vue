@@ -6,7 +6,7 @@
       </app-toolbar>
       <app-search :query.sync="query" :placeholder="placeholder"></app-search>
       <!-- {{ repos }}      -->
-      <app-list-repos> </app-list-repos>
+      <app-list-repos :repos="repos" :query="query"> </app-list-repos>
     </v-ons-page>
 </template>
 <script>
@@ -39,6 +39,7 @@ import { gitHub } from './services/GitHubService.js'
         .then((response) => {
           this.repos = response.data
         })
+        .catch( (error) => {console.log(error) })
       }, 500)
     }
   };
