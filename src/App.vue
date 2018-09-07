@@ -6,15 +6,20 @@
       </app-toolbar>
       <app-search :query.sync="query" :placeholder="placeholder"></app-search>
       <!-- {{ repos }}      -->
-      <app-list-repos :repos="repos" 
+      <app-list-repos  v-show="query"
+                      :repos="repos"
                       :query="query"
-                      :loadingRepos="loadingRepos"> </app-list-repos>
+                      :loadingRepos="loadingRepos" />
+      <empty-state v-show="noRepos"/> 
+
     </v-ons-page>
 </template>
 <script>
 import AppToolbar from './components/AppToolbar.vue'
 import AppSearch from './components/AppSearch.vue'
 import AppListRepos from './components/AppListRepos.vue'
+import EmptyState from './components/EmptyState.vue'
+
 import debounce from 'lodash/debounce'
 import { gitHub } from './services/GitHubService.js'
 
@@ -22,15 +27,17 @@ import { gitHub } from './services/GitHubService.js'
     components: {
       AppToolbar,
       AppSearch,
-      AppListRepos
+      AppListRepos,
+      EmptyState
     },
 
     data() {
       return {
         query: "",
-        placeholder: "Wnat someting?!",
+        placeholder: "Want someting?!",
         repos: [],
-        loadingRepos: false
+        loadingRepos: false,
+        noRepos: false
       }
     },
 
@@ -38,13 +45,19 @@ import { gitHub } from './services/GitHubService.js'
       query: debounce(function (newValue) {
         // console.log(newValue)
         this.loadingRepos = true
+        this.noRepos = 0
         gitHub
         .getRepos(newValue)
         .then((response) => {
           this.repos = response.data
+          
         })
-        .catch( (error) => {console.log(error) })
-        .finally((vm) => this.loadingRepos = false)
+        .catch( (error) => { if(error.response.status === 404){
+                                  // dodaj ovde
+                                } 
+                          })
+                            
+        .finally((vm) => { this.loadingRepos = false })
       }, 500)
     }
   };
