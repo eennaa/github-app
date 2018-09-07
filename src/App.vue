@@ -6,7 +6,9 @@
       </app-toolbar>
       <app-search :query.sync="query" :placeholder="placeholder"></app-search>
       <!-- {{ repos }}      -->
-      <app-list-repos :repos="repos" :query="query"> </app-list-repos>
+      <app-list-repos :repos="repos" 
+                      :query="query"
+                      :loadingRepos="loadingRepos"> </app-list-repos>
     </v-ons-page>
 </template>
 <script>
@@ -27,19 +29,22 @@ import { gitHub } from './services/GitHubService.js'
       return {
         query: "",
         placeholder: "Wnat someting?!",
-        repos: []
+        repos: [],
+        loadingRepos: false
       }
     },
 
     watch: {
       query: debounce(function (newValue) {
         // console.log(newValue)
+        this.loadingRepos = true
         gitHub
         .getRepos(newValue)
         .then((response) => {
           this.repos = response.data
         })
         .catch( (error) => {console.log(error) })
+        .finally((vm) => this.loadingRepos = false)
       }, 500)
     }
   };
